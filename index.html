@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarthGuard — Protect Our Planet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0d2b1a;
+    --green-rich: #1a4a2e;
+    --green-mid: #2d7a4f;
+    --green-bright: #3eb876;
+    --green-light: #6dd9a0;
+    --amber: #f4a636;
+    --amber-light: #ffc966;
+    --cream: #f8f3e8;
+    --white: #ffffff;
+    --text-dark: #0a1f12;
+    --text-mid: #3a5a45;
+    --text-light: #7aad90;
+    --bark: #8b5e3c;
+    --sky: #c8e6f5;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  body { cursor: none; }
+  #cursor {
+    position: fixed; width: 14px; height: 14px;
+    background: var(--green-bright); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform .15s, background .2s;
+    mix-blend-mode: multiply;
+  }
+  #cursor-ring {
+    position: fixed; width: 38px; height: 38px;
+    border: 2px solid var(--green-bright); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: transform .35s cubic-bezier(.25,.46,.45,.94), opacity .3s;
+    opacity: .6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 1.4rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .4s, box-shadow .4s;
+  }
+  nav.scrolled {
+    background: rgba(13,43,26,.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 2px 30px rgba(0,0,0,.25);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 900;
+    color: var(--green-light);
+    letter-spacing: -.5px;
+  }
+  .nav-logo span { color: var(--amber); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--cream); text-decoration: none;
+    font-size: .9rem; font-weight: 500; letter-spacing: .5px;
+    position: relative; padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1.5px; background: var(--green-bright);
+    transition: width .3s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--green-bright); color: var(--green-deep) !important;
+    padding: .55rem 1.4rem; border-radius: 50px;
+    font-weight: 600 !important; transition: background .25s, transform .2s !important;
+  }
+  .nav-cta:hover { background: var(--amber) !important; transform: scale(1.05); }
+  .nav-cta::after { display: none !important; }
+  .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .nav-burger span { width: 26px; height: 2px; background: var(--cream); border-radius: 2px; transition: .3s; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 60%, #1a4a2e 0%, #0d2b1a 55%, #071810 100%);
+  }
+  .hero-bg::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Ccircle cx='40' cy='40' r='1' fill='%232d7a4f' opacity='.15'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: .5;
+  }
+  /* Animated floating leaves */
+  .leaf {
+    position: absolute; width: 60px; opacity: .12;
+    animation: floatLeaf 12s infinite ease-in-out;
+  }
+  @keyframes floatLeaf {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-40px) rotate(20deg); }
+  }
+  .hero-inner {
+    position: relative; z-index: 2; text-align: center;
+    padding: 0 2rem; max-width: 900px;
+  }
+  .hero-badge {
+    display: inline-block; background: rgba(62,184,118,.15);
+    border: 1px solid rgba(62,184,118,.35); color: var(--green-light);
+    font-size: .78rem; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; padding: .45rem 1.2rem; border-radius: 50px;
+    margin-bottom: 1.8rem;
+    animation: fadeUp .8s .2s both;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 900; line-height: 1.08;
+    color: var(--white);
+    animation: fadeUp .9s .35s both;
+  }
+  .hero-title .accent { color: var(--green-bright); }
+  .hero-title .amber { color: var(--amber); }
+  .hero-sub {
+    margin: 1.8rem auto; max-width: 580px;
+    font-size: 1.15rem; color: rgba(248,243,232,.7);
+    line-height: 1.7; font-weight: 300;
+    animation: fadeUp .9s .5s both;
+  }
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp .9s .65s both;
+  }
+  .btn-primary {
+    background: var(--green-bright); color: var(--green-deep);
+    padding: .9rem 2.4rem; border-radius: 50px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: background .25s, transform .2s, box-shadow .25s;
+    box-shadow: 0 0 0 0 rgba(62,184,118,.4);
+  }
+  .btn-primary:hover {
+    background: var(--amber); transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(62,184,118,.35);
+  }
+  .btn-outline {
+    background: transparent; color: var(--cream);
+    padding: .9rem 2.4rem; border-radius: 50px;
+    border: 1.5px solid rgba(248,243,232,.35);
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 500;
+    cursor: pointer; transition: border-color .25s, background .25s, transform .2s;
+  }
+  .btn-outline:hover { border-color: var(--green-bright); background: rgba(62,184,118,.1); transform: translateY(-3px); }
+
+  .hero-stats {
+    position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 4rem; z-index: 2;
+    animation: fadeUp .9s .85s both;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 700; color: var(--green-bright);
+  }
+  .stat-label { font-size: .8rem; color: rgba(248,243,232,.55); letter-spacing: 1px; text-transform: uppercase; }
+
+  .scroll-indicator {
+    position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(248,243,232,.4); font-size: .7rem; letter-spacing: 1px;
+    animation: bounce 2s infinite;
+    z-index: 2;
+  }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(248,243,232,.4), transparent); }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    background: var(--green-mid); padding: .9rem 0; overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,.08);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .marquee-track {
+    display: flex; gap: 3rem; white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    font-size: .85rem; font-weight: 600; color: var(--cream);
+    letter-spacing: 1.5px; text-transform: uppercase; opacity: .85;
+    display: flex; align-items: center; gap: .7rem;
+  }
+  .marquee-dot { width: 6px; height: 6px; background: var(--amber); border-radius: 50%; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ── SECTION BASE ── */
+  section { padding: 7rem 4rem; }
+  .section-tag {
+    display: inline-block; color: var(--green-mid); font-size: .78rem;
+    font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700;
+    line-height: 1.2; color: var(--green-deep);
+  }
+  .section-title .highlight { color: var(--green-mid); }
+
+  /* ── MISSION ── */
+  #mission { background: var(--cream); }
+  .mission-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: center; max-width: 1200px; margin: 0 auto;
+  }
+  .mission-text p {
+    margin-top: 1.4rem; font-size: 1.05rem;
+    color: var(--text-mid); line-height: 1.85; font-weight: 300;
+  }
+  .mission-text .cta-link {
+    display: inline-flex; align-items: center; gap: .5rem;
+    margin-top: 2rem; color: var(--green-mid); font-weight: 600;
+    text-decoration: none; font-size: .95rem;
+    border-bottom: 1.5px solid var(--green-bright); padding-bottom: 2px;
+    transition: gap .2s, color .2s;
+  }
+  .mission-text .cta-link:hover { gap: .9rem; color: var(--green-deep); }
+  .mission-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
+  }
+  .m-card {
+    background: var(--white); border-radius: 20px; padding: 1.8rem;
+    border: 1px solid rgba(45,122,79,.1);
+    transition: transform .3s, box-shadow .3s;
+    position: relative; overflow: hidden;
+  }
+  .m-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: linear-gradient(90deg, var(--green-bright), var(--green-light));
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .m-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(45,122,79,.12); }
+  .m-card:hover::before { transform: scaleX(1); }
+  .m-card-icon { font-size: 2rem; margin-bottom: .8rem; }
+  .m-card h3 { font-size: 1rem; font-weight: 600; color: var(--green-deep); margin-bottom: .4rem; }
+  .m-card p { font-size: .85rem; color: var(--text-mid); line-height: 1.6; }
+  .m-card.featured { background: var(--green-deep); grid-column: span 2; }
+  .m-card.featured h3, .m-card.featured p { color: var(--cream); opacity: .9; }
+
+  /* ── CAUSES ── */
+  #causes { background: var(--green-deep); }
+  #causes .section-tag { color: var(--green-light); }
+  #causes .section-title { color: var(--white); }
+  .causes-intro { color: rgba(248,243,232,.6); margin-top: .8rem; max-width: 500px; font-weight: 300; }
+  .causes-header { display: flex; align-items: flex-end; justify-content: space-between; max-width: 1200px; margin: 0 auto 3.5rem; }
+  .causes-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .cause-card {
+    border-radius: 24px; overflow: hidden; position: relative;
+    height: 440px; cursor: pointer;
+    transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  }
+  .cause-card:hover { transform: translateY(-10px) scale(1.02); }
+  .cause-card:first-child { grid-row: span 2; height: auto; min-height: 580px; }
+  .cause-bg {
+    position: absolute; inset: 0; background-size: cover; background-position: center;
+    transition: transform .6s; filter: brightness(.7);
+  }
+  .cause-card:hover .cause-bg { transform: scale(1.08); }
+  .cause-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(7,24,16,.9) 30%, transparent 70%);
+  }
+  .cause-content {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem;
+  }
+  .cause-tag {
+    display: inline-block; background: var(--green-bright); color: var(--green-deep);
+    font-size: .7rem; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: .3rem .8rem; border-radius: 50px;
+    margin-bottom: .8rem;
+  }
+  .cause-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--white); margin-bottom: .5rem;
+  }
+  .cause-content p { font-size: .875rem; color: rgba(248,243,232,.7); line-height: 1.6; margin-bottom: 1.2rem; }
+  .cause-progress-wrap { margin-bottom: 1rem; }
+  .cause-progress-info { display: flex; justify-content: space-between; font-size: .78rem; color: rgba(248,243,232,.7); margin-bottom: .4rem; }
+  .cause-bar { background: rgba(255,255,255,.15); border-radius: 50px; height: 5px; overflow: hidden; }
+  .cause-fill { height: 100%; background: linear-gradient(90deg, var(--green-bright), var(--amber)); border-radius: 50px; transition: width 1.5s ease; }
+  .cause-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,.12); color: var(--white);
+    border: 1px solid rgba(255,255,255,.25); padding: .55rem 1.2rem;
+    border-radius: 50px; font-size: .82rem; font-weight: 500;
+    text-decoration: none; transition: background .2s, border-color .2s;
+  }
+  .cause-btn:hover { background: var(--green-bright); border-color: var(--green-bright); color: var(--green-deep); }
+
+  /* ── HOW WE WORK ── */
+  #how { background: var(--cream); }
+  .how-inner { max-width: 1200px; margin: 0 auto; }
+  .how-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; margin-top: 4rem; }
+  .step {
+    text-align: center; position: relative;
+    animation: fadeUp .8s both;
+  }
+  .step::after {
+    content: ''; position: absolute; top: 2.5rem; left: calc(50% + 40px);
+    width: calc(100% - 80px); height: 1.5px;
+    background: linear-gradient(90deg, var(--green-bright), transparent);
+  }
+  .step:last-child::after { display: none; }
+  .step-num {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-bright), var(--green-mid));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700;
+    color: var(--white); margin: 0 auto 1.2rem;
+    box-shadow: 0 8px 30px rgba(62,184,118,.25);
+  }
+  .step h3 { font-size: 1.05rem; font-weight: 600; color: var(--green-deep); margin-bottom: .5rem; }
+  .step p { font-size: .875rem; color: var(--text-mid); line-height: 1.65; }
+
+  /* ── IMPACT ── */
+  #impact {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #1a4a2e 100%);
+    position: relative; overflow: hidden;
+  }
+  #impact::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(62,184,118,.08) 0%, transparent 70%);
+  }
+  .impact-inner { max-width: 1200px; margin: 0 auto; }
+  #impact .section-tag { color: var(--green-light); }
+  #impact .section-title { color: var(--white); }
+  .impact-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; margin-top: 4rem;
+  }
+  .impact-stat {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px; padding: 2.5rem 2rem; text-align: center;
+    transition: background .3s, transform .3s;
+  }
+  .impact-stat:hover { background: rgba(62,184,118,.12); transform: translateY(-5px); }
+  .impact-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .impact-num {
+    font-family: 'Playfair Display', serif; font-size: 2.8rem;
+    font-weight: 700; color: var(--green-bright); line-height: 1;
+  }
+  .impact-label { margin-top: .5rem; font-size: .85rem; color: rgba(248,243,232,.6); line-height: 1.5; }
+
+  /* ── DONATE ── */
+  #donate { background: var(--cream); }
+  .donate-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  .donate-inner .section-title { margin-bottom: 1rem; }
+  .donate-sub { color: var(--text-mid); font-size: 1rem; margin-bottom: 3rem; font-weight: 300; }
+  .amount-grid { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+  .amount-btn {
+    background: var(--white); border: 1.5px solid rgba(45,122,79,.2);
+    color: var(--green-deep); padding: .9rem 2rem; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all .25s;
+  }
+  .amount-btn:hover, .amount-btn.active {
+    background: var(--green-bright); border-color: var(--green-bright); color: var(--green-deep);
+    transform: scale(1.05);
+  }
+  .donate-custom {
+    display: flex; gap: 1rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap;
+  }
+  .donate-custom input {
+    padding: .9rem 1.6rem; border-radius: 50px; border: 1.5px solid rgba(45,122,79,.25);
+    font-family: 'DM Sans', sans-serif; font-size: 1rem; color: var(--green-deep);
+    background: var(--white); outline: none; width: 200px;
+    transition: border-color .2s;
+  }
+  .donate-custom input:focus { border-color: var(--green-bright); }
+  .cause-select {
+    padding: .9rem 1.6rem; border-radius: 50px; border: 1.5px solid rgba(45,122,79,.25);
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; color: var(--green-deep);
+    background: var(--white); outline: none; cursor: pointer;
+    transition: border-color .2s;
+  }
+  .cause-select:focus { border-color: var(--green-bright); }
+  .btn-donate {
+    background: linear-gradient(135deg, var(--green-bright), var(--green-mid));
+    color: var(--white); padding: 1.1rem 3.5rem; border-radius: 50px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 1.05rem; font-weight: 600;
+    cursor: pointer; transition: transform .25s, box-shadow .25s;
+    box-shadow: 0 8px 30px rgba(45,122,79,.3);
+  }
+  .btn-donate:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(45,122,79,.4); }
+  .trust-badges {
+    display: flex; gap: 2rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap;
+  }
+  .trust-badge {
+    display: flex; align-items: center; gap: .5rem;
+    font-size: .8rem; color: var(--text-mid);
+  }
+  .trust-badge span { font-size: 1.1rem; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--green-deep); padding: 7rem 4rem; }
+  #testimonials .section-tag { color: var(--green-light); }
+  #testimonials .section-title { color: var(--white); }
+  .testi-inner { max-width: 1200px; margin: 0 auto; }
+  .testi-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .testi-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px; padding: 2rem;
+    transition: background .3s, transform .3s;
+  }
+  .testi-card:hover { background: rgba(62,184,118,.1); transform: translateY(-5px); }
+  .testi-stars { color: var(--amber); font-size: 1rem; margin-bottom: 1rem; }
+  .testi-text { font-size: .92rem; color: rgba(248,243,232,.8); line-height: 1.75; font-style: italic; margin-bottom: 1.5rem; }
+  .testi-author { display: flex; align-items: center; gap: .8rem; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-bright), var(--green-mid));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--green-deep); font-size: .9rem;
+  }
+  .testi-name { font-weight: 600; color: var(--white); font-size: .9rem; }
+  .testi-role { font-size: .78rem; color: rgba(248,243,232,.5); }
+
+  /* ── NEWSLETTER ── */
+  #newsletter {
+    background: linear-gradient(135deg, var(--green-bright) 0%, var(--green-mid) 100%);
+    padding: 5rem 4rem; text-align: center;
+  }
+  #newsletter .section-title { color: var(--green-deep); }
+  .nl-sub { color: rgba(13,43,26,.7); margin: .8rem 0 2.5rem; font-size: 1.05rem; }
+  .nl-form {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; max-width: 500px; margin: 0 auto;
+  }
+  .nl-form input {
+    flex: 1; min-width: 250px; padding: .95rem 1.8rem; border-radius: 50px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; outline: none;
+    color: var(--green-deep);
+  }
+  .btn-nl {
+    background: var(--green-deep); color: var(--cream);
+    padding: .95rem 2rem; border-radius: 50px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: background .25s, transform .2s;
+  }
+  .btn-nl:hover { background: #071810; transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #071810; color: rgba(248,243,232,.7);
+    padding: 5rem 4rem 2.5rem;
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; max-width: 1200px; margin: 0 auto; }
+  .footer-brand .nav-logo { display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: .875rem; line-height: 1.75; font-weight: 300; max-width: 280px; }
+  .footer-socials { display: flex; gap: .8rem; margin-top: 1.5rem; }
+  .social-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .9rem; text-decoration: none; color: var(--cream);
+    transition: background .2s, transform .2s;
+  }
+  .social-btn:hover { background: var(--green-mid); transform: scale(1.1); }
+  .footer-col h4 { font-size: .9rem; font-weight: 600; color: var(--cream); margin-bottom: 1.2rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+  .footer-col ul a { color: rgba(248,243,232,.6); text-decoration: none; font-size: .85rem; transition: color .2s; }
+  .footer-col ul a:hover { color: var(--green-bright); }
+  .footer-bottom {
+    max-width: 1200px; margin: 3rem auto 0;
+    padding-top: 2rem; border-top: 1px solid rgba(255,255,255,.08);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    font-size: .8rem; color: rgba(248,243,232,.35);
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--green-deep); color: var(--cream);
+    padding: 1rem 1.5rem; border-radius: 14px; border-left: 4px solid var(--green-bright);
+    box-shadow: 0 8px 30px rgba(0,0,0,.3); z-index: 9999;
+    transform: translateY(120%); transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+    font-size: .9rem; max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    .nav-burger { display: flex; }
+    section { padding: 5rem 2rem; }
+    .mission-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .causes-grid { grid-template-columns: 1fr; }
+    .cause-card:first-child { min-height: 340px; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+    .step::after { display: none; }
+    .impact-grid { grid-template-columns: 1fr 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    .causes-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .hero-stats { flex-direction: column; gap: 1.2rem; bottom: 2rem; }
+    #newsletter, #testimonials { padding: 5rem 2rem; }
+    footer { padding: 4rem 2rem 2rem; }
+  }
+  @media (max-width: 560px) {
+    .how-steps { grid-template-columns: 1fr; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero-stats { display: none; }
+    .mission-cards { grid-template-columns: 1fr; }
+    .m-card.featured { grid-column: span 1; }
+  }
+
+  /* ── REVEAL ANIM ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s, transform .8s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Mobile nav open */
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 70px; left: 0; right: 0;
+    background: rgba(13,43,26,.97); padding: 2rem;
+    gap: 1.5rem; border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">Earth<span>Guard</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#causes">Causes</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#donate">Donate</a></li>
+    <li><a href="#newsletter" class="nav-cta">Get Involved</a></li>
+  </ul>
+  <div class="nav-burger" id="burger" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Floating SVG leaves -->
+  <svg class="leaf" style="top:15%;left:5%;animation-delay:0s" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 90 Q50 10 90 20 Q60 70 10 90Z" fill="#3eb876"/></svg>
+  <svg class="leaf" style="top:60%;right:8%;animation-delay:-4s;width:45px" viewBox="0 0 100 100" fill="none"><path d="M10 90 Q50 10 90 20 Q60 70 10 90Z" fill="#6dd9a0"/></svg>
+  <svg class="leaf" style="top:30%;right:20%;animation-delay:-8s;width:35px" viewBox="0 0 100 100" fill="none"><path d="M10 90 Q50 10 90 20 Q60 70 10 90Z" fill="#f4a636"/></svg>
+  <svg class="leaf" style="top:75%;left:20%;animation-delay:-2s;width:50px" viewBox="0 0 100 100" fill="none"><path d="M10 90 Q50 10 90 20 Q60 70 10 90Z" fill="#3eb876"/></svg>
+
+  <div class="hero-inner">
+    <div class="hero-badge">🌿 Non-Profit Environmental Charity</div>
+    <h1 class="hero-title">
+      Protect Our<br>
+      <span class="accent">Living</span> <span class="amber">Planet</span>
+    </h1>
+    <p class="hero-sub">
+      Every tree planted, every ocean cleaned, every species protected — your action today shapes the world our children inherit tomorrow.
+    </p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="scrollTo('#donate')">Donate Now 🌱</button>
+      <button class="btn-outline" onclick="scrollTo('#causes')">Explore Causes</button>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num" data-target="4.2">0</div>
+      <div class="stat-label">Million Trees Planted</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="128">0</div>
+      <div class="stat-label">Countries Reached</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="89">0</div>
+      <div class="stat-label">Projects Active</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item"><span class="marquee-dot"></span>Reforestation</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Ocean Cleanup</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Wildlife Protection</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Clean Energy</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Zero Waste</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Climate Action</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Biodiversity</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Soil Health</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Reforestation</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Ocean Cleanup</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Wildlife Protection</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Clean Energy</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Zero Waste</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Climate Action</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Biodiversity</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Soil Health</span>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section id="mission">
+  <div class="mission-grid">
+    <div class="mission-text reveal">
+      <span class="section-tag">Our Mission</span>
+      <h2 class="section-title">We Fight for a <span class="highlight">Greener</span> World Every Day</h2>
+      <p>EarthGuard is a global environmental non-profit dedicated to reversing ecological damage, conserving biodiversity, and empowering communities to live sustainably. Since 2008, we've turned grassroots passion into measurable change.</p>
+      <p>Our science-backed programs address the root causes of climate change, deforestation, ocean pollution, and species extinction. Every dollar you donate is put to work in the field — not in boardrooms.</p>
+      <a href="#donate" class="cta-link">Support Our Work →</a>
+    </div>
+    <div class="mission-cards reveal">
+      <div class="m-card">
+        <div class="m-card-icon">🌳</div>
+        <h3>Forest Restoration</h3>
+        <p>Replanting native ecosystems in deforested regions across 6 continents.</p>
+      </div>
+      <div class="m-card">
+        <div class="m-card-icon">🐋</div>
+        <h3>Marine Conservation</h3>
+        <p>Protecting over 2,000 marine species from pollution and climate threats.</p>
+      </div>
+      <div class="m-card">
+        <div class="m-card-icon">☀️</div>
+        <h3>Clean Energy Access</h3>
+        <p>Bringing renewable energy to 500+ communities in developing nations.</p>
+      </div>
+      <div class="m-card">
+        <div class="m-card-icon">🦁</div>
+        <h3>Wildlife Corridors</h3>
+        <p>Creating safe passages for endangered species across fragmented habitats.</p>
+      </div>
+      <div class="m-card featured">
+        <div class="m-card-icon">🌍</div>
+        <h3>100% Transparent Funding</h3>
+        <p>Every dollar tracked, every project reported. We publish full financial breakdowns because trust is our most precious resource.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAUSES -->
+<section id="causes">
+  <div class="causes-header reveal">
+    <div>
+      <span class="section-tag">Active Causes</span>
+      <h2 class="section-title">Choose Your <br>Impact Area</h2>
+      <p class="causes-intro">Fund the cause closest to your heart. Every campaign has a specific, measurable goal.</p>
+    </div>
+    <button class="btn-outline" style="color:var(--cream);white-space:nowrap" onclick="showToast('Viewing all causes...')">View All Causes →</button>
+  </div>
+  <div class="causes-grid reveal">
+    <div class="cause-card">
+      <div class="cause-bg" style="background: linear-gradient(135deg,#0d2b1a,#1a4a2e), url('') center/cover; background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80')"></div>
+      <div class="cause-overlay"></div>
+      <div class="cause-content">
+        <span class="cause-tag">🌳 Forests</span>
+        <h3>Amazon Reforestation Initiative</h3>
+        <p>Restoring 50,000 hectares of degraded Amazonian land with native species, supporting local indigenous communities.</p>
+        <div class="cause-progress-wrap">
+          <div class="cause-progress-info"><span>$284,500 raised</span><span>71%</span></div>
+          <div class="cause-bar"><div class="cause-fill" style="width:71%"></div></div>
+        </div>
+        <a href="#donate" class="cause-btn">Donate to This →</a>
+      </div>
+    </div>
+    <div class="cause-card">
+      <div class="cause-bg" style="background-image: url('https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=80')"></div>
+      <div class="cause-overlay"></div>
+      <div class="cause-content">
+        <span class="cause-tag">🌊 Oceans</span>
+        <h3>Pacific Ocean Cleanup</h3>
+        <p>Removing 10,000 tons of plastic from the Great Pacific Garbage Patch.</p>
+        <div class="cause-progress-wrap">
+          <div class="cause-progress-info"><span>$156,200 raised</span><span>52%</span></div>
+          <div class="cause-bar"><div class="cause-fill" style="width:52%"></div></div>
+        </div>
+        <a href="#donate" class="cause-btn">Donate to This →</a>
+      </div>
+    </div>
+    <div class="cause-card">
+      <div class="cause-bg" style="background-image: url('https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&q=80')"></div>
+      <div class="cause-overlay"></div>
+      <div class="cause-content">
+        <span class="cause-tag">🦁 Wildlife</span>
+        <h3>African Wildlife Corridors</h3>
+        <p>Securing migratory routes for elephants, lions, and 400+ endangered species.</p>
+        <div class="cause-progress-wrap">
+          <div class="cause-progress-info"><span>$92,800 raised</span><span>37%</span></div>
+          <div class="cause-bar"><div class="cause-fill" style="width:37%"></div></div>
+        </div>
+        <a href="#donate" class="cause-btn">Donate to This →</a>
+      </div>
+    </div>
+    <div class="cause-card">
+      <div class="cause-bg" style="background-image: url('https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=600&q=80')"></div>
+      <div class="cause-overlay"></div>
+      <div class="cause-content">
+        <span class="cause-tag">☀️ Energy</span>
+        <h3>Solar Villages Program</h3>
+        <p>Installing solar grids in 200 off-grid communities across Sub-Saharan Africa.</p>
+        <div class="cause-progress-wrap">
+          <div class="cause-progress-info"><span>$201,000 raised</span><span>67%</span></div>
+          <div class="cause-bar"><div class="cause-fill" style="width:67%"></div></div>
+        </div>
+        <a href="#donate" class="cause-btn">Donate to This →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section id="how">
+  <div class="how-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:.5rem">
+      <span class="section-tag">How It Works</span>
+      <h2 class="section-title" style="margin:0 auto;max-width:500px">Your Donation in <span class="highlight">4 Simple Steps</span></h2>
+    </div>
+    <div class="how-steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Choose Your Cause</h3>
+        <p>Browse our active campaigns and pick the environmental cause that moves you most.</p>
+      </div>
+      <div class="step reveal" style="animation-delay:.1s">
+        <div class="step-num">02</div>
+        <h3>Make a Donation</h3>
+        <p>Give any amount — every rupee counts. Monthly donations create the most lasting impact.</p>
+      </div>
+      <div class="step reveal" style="animation-delay:.2s">
+        <div class="step-num">03</div>
+        <h3>Track Your Impact</h3>
+        <p>Receive real-time updates, photos, and data reports from your funded project.</p>
+      </div>
+      <div class="step reveal" style="animation-delay:.3s">
+        <div class="step-num">04</div>
+        <h3>Spread the Word</h3>
+        <p>Share your action with friends. Every referral multiplies the impact of your gift.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT -->
+<section id="impact">
+  <div class="impact-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-tag">Our Impact</span>
+      <h2 class="section-title">Numbers That <span style="color:var(--green-bright)">Matter</span></h2>
+    </div>
+    <div class="impact-grid reveal">
+      <div class="impact-stat">
+        <div class="impact-icon">🌲</div>
+        <div class="impact-num" data-target="4.2">0</div>
+        <div class="impact-label">Million Trees Planted & Thriving</div>
+      </div>
+      <div class="impact-stat">
+        <div class="impact-icon">🌊</div>
+        <div class="impact-num" data-target="18500">0</div>
+        <div class="impact-label">Tons of Ocean Plastic Removed</div>
+      </div>
+      <div class="impact-stat">
+        <div class="impact-icon">🦋</div>
+        <div class="impact-num" data-target="340">0</div>
+        <div class="impact-label">Species Populations Stabilized</div>
+      </div>
+      <div class="impact-stat">
+        <div class="impact-icon">👨‍👩‍👧</div>
+        <div class="impact-num" data-target="2.1">0</div>
+        <div class="impact-label">Million Lives Positively Impacted</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DONATE -->
+<section id="donate">
+  <div class="donate-inner reveal">
+    <span class="section-tag">Make a Difference</span>
+    <h2 class="section-title">Every Rupee Plants a <span class="highlight">Seed of Change</span></h2>
+    <p class="donate-sub">Choose an amount or enter your own. 93 paise of every rupee goes directly to field projects.</p>
+    <div class="amount-grid">
+      <button class="amount-btn" onclick="selectAmount(this, 500)">₹500</button>
+      <button class="amount-btn active" onclick="selectAmount(this, 1000)">₹1,000</button>
+      <button class="amount-btn" onclick="selectAmount(this, 2500)">₹2,500</button>
+      <button class="amount-btn" onclick="selectAmount(this, 5000)">₹5,000</button>
+    </div>
+    <div class="donate-custom">
+      <input type="number" id="customAmount" placeholder="Custom amount (₹)" min="100"/>
+      <select class="cause-select" id="causeSelect">
+        <option value="">🌍 Where needed most</option>
+        <option value="forest">🌳 Amazon Reforestation</option>
+        <option value="ocean">🌊 Ocean Cleanup</option>
+        <option value="wildlife">🦁 Wildlife Corridors</option>
+        <option value="solar">☀️ Solar Villages</option>
+      </select>
+    </div>
+    <button class="btn-donate" onclick="handleDonate()">🌱 Donate Securely Now</button>
+    <div class="trust-badges">
+      <div class="trust-badge"><span>🔒</span> 256-bit SSL Secure</div>
+      <div class="trust-badge"><span>✅</span> 80G Tax Exemption</div>
+      <div class="trust-badge"><span>🏆</span> GuideStar Platinum Seal</div>
+      <div class="trust-badge"><span>💳</span> UPI / Cards / NetBanking</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testi-inner">
+    <div class="testi-header reveal">
+      <div>
+        <span class="section-tag">Voices of Change</span>
+        <h2 class="section-title">What Our <span style="color:var(--green-bright)">Community</span> Says</h2>
+      </div>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I've been donating monthly for two years. The transparency is incredible — I get photo updates from the actual forest where my trees are growing. It feels real."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">PR</div>
+          <div>
+            <div class="testi-name">Priya Rao</div>
+            <div class="testi-role">Monthly Donor, Pune</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Our company partnered with EarthGuard for our CSR program. The impact reports are detailed, credible, and our employees genuinely feel connected to the mission."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AK</div>
+          <div>
+            <div class="testi-name">Arjun Kapoor</div>
+            <div class="testi-role">CSR Head, TechCorp India</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"As a marine biologist, I'm critical of greenwashing. EarthGuard is the real deal — peer-reviewed methodologies, measurable outcomes, and zero bureaucratic waste."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SM</div>
+          <div>
+            <div class="testi-name">Dr. Sunita Menon</div>
+            <div class="testi-role">Marine Biologist, Chennai</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <span class="section-tag" style="color:var(--green-deep)">Stay Connected</span>
+  <h2 class="section-title">Join 85,000+ Earth Champions</h2>
+  <p class="nl-sub">Get monthly field reports, impact stories, and ways to act — delivered to your inbox.</p>
+  <div class="nl-form">
+    <input type="email" id="nlEmail" placeholder="Your email address" />
+    <button class="btn-nl" onclick="handleSubscribe()">Subscribe Free</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">Earth<span>Guard</span></div>
+      <p>Registered Non-Profit Organisation (80G, 12A). Working across 128 countries to restore nature and fight climate change since 2008.</p>
+      <div class="footer-socials">
+        <a class="social-btn" href="#" title="Twitter">𝕏</a>
+        <a class="social-btn" href="#" title="Instagram">📸</a>
+        <a class="social-btn" href="#" title="Facebook">f</a>
+        <a class="social-btn" href="#" title="LinkedIn">in</a>
+        <a class="social-btn" href="#" title="YouTube">▶</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Our Work</h4>
+      <ul>
+        <li><a href="#">Reforestation</a></li>
+        <li><a href="#">Ocean Cleanup</a></li>
+        <li><a href="#">Wildlife Protection</a></li>
+        <li><a href="#">Clean Energy</a></li>
+        <li><a href="#">Climate Education</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Get Involved</h4>
+      <ul>
+        <li><a href="#">Donate</a></li>
+        <li><a href="#">Volunteer</a></li>
+        <li><a href="#">Corporate CSR</a></li>
+        <li><a href="#">Fundraise</a></li>
+        <li><a href="#">Legacy Giving</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Organisation</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Annual Reports</a></li>
+        <li><a href="#">Press & Media</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 EarthGuard. All rights reserved. Non-profit Reg. No. EG/2008/04721</span>
+    <span>Made with 💚 for the planet</span>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 7 + 'px';
+    cursor.style.top = my - 7 + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * .12;
+    ry += (my - ry) * .12;
+    ring.style.left = rx - 19 + 'px';
+    ring.style.top = ry - 19 + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  document.querySelectorAll('a,button,.cause-card,.m-card,.impact-stat').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.opacity = '.3'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.opacity = '.6'; });
+  });
+
+  // ── NAV ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // ── SMOOTH SCROLL ──
+  function scrollTo(target) {
+    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.querySelector(a.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // ── REVEAL ON SCROLL ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ── COUNT UP ──
+  const countEls = document.querySelectorAll('[data-target]');
+  const countIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseFloat(el.dataset.target);
+      const isFloat = target % 1 !== 0;
+      let start = 0;
+      const step = target / 60;
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) { start = target; clearInterval(timer); }
+        el.textContent = isFloat ? start.toFixed(1) : Math.round(start).toLocaleString();
+      }, 30);
+      countIO.unobserve(el);
+    });
+  }, { threshold: 0.3 });
+  countEls.forEach(el => countIO.observe(el));
+
+  // ── DONATE AMOUNT ──
+  let selectedAmt = 1000;
+  function selectAmount(btn, amt) {
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedAmt = amt;
+    document.getElementById('customAmount').value = '';
+  }
+
+  function handleDonate() {
+    const custom = document.getElementById('customAmount').value;
+    const amt = custom ? parseInt(custom) : selectedAmt;
+    const cause = document.getElementById('causeSelect').value;
+    const causeNames = { '': 'Where needed most', forest: 'Amazon Reforestation', ocean: 'Ocean Cleanup', wildlife: 'Wildlife Corridors', solar: 'Solar Villages' };
+    if (amt < 100) { showToast('⚠️ Minimum donation is ₹100. Thank you!'); return; }
+    showToast(`🌱 Thank you! Your ₹${amt.toLocaleString()} gift to "${causeNames[cause]}" is being processed!`);
+  }
+
+  // ── SUBSCRIBE ──
+  function handleSubscribe() {
+    const email = document.getElementById('nlEmail').value;
+    if (!email || !email.includes('@')) { showToast('⚠️ Please enter a valid email address.'); return; }
+    showToast(`💚 Welcome aboard! Check ${email} to confirm your subscription.`);
+    document.getElementById('nlEmail').value = '';
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // ── CAUSE CARD PROGRESS ANIMATION ──
+  const causeIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.cause-fill').forEach(fill => {
+          const w = fill.style.width;
+          fill.style.width = '0';
+          setTimeout(() => fill.style.width = w, 300);
+        });
+        causeIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.cause-card').forEach(c => causeIO.observe(c));
+</script>
+</body>
+</html>
